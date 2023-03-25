@@ -4,17 +4,14 @@
 */
 
 //Inicializacion de var,objetos, DOM
-const nickInput=document.getElementById("nick");
-const tamanoInput=document.getElementById("tamano");
-const formEntrada=document.getElementById("formEntrada");
-const error=document.getElementById("error");
-
-//Comprobar si hay algún error de juego.html
-if(sessionStorage.getItem('error')!=null)
-{
-    error.innerText=sessionStorage.getItem('error');
-    sessionStorage.removeItem('error');
-}
+var nickInput;
+var emailInput;
+var tamanoInput;
+var formEntrada;
+var error;
+var avatarItems;
+var itemImg;
+var avatarCont;
 
 //Funciones de evento
 function comprobarForm(event){
@@ -32,9 +29,44 @@ function comprobarForm(event){
         return false;
     }
     //Informacion es correcta
-    datosUsuario(nickInput);
+    datosUsuario(nickInput, tamanoInput, emailInput,avatarCont);
     return true;
+}
+function moviendoImg(event){
+    itemImg=event.target;
+    console.log(itemImg.src);
+}
+function cambiarImg(event){
+    avatarCont.src=itemImg.src;
+}
+//carga de objetos del dom, comprobaciones y formulario
+function domCargado(){
+    //caputra de todos los elements necesarios
+     nickInput = document.getElementById("nick");
+     emailInput = document.getElementById("email");
+     tamanoInput = document.getElementById("tamano");
+     formEntrada = document.getElementById("formEntrada");
+     error = document.getElementById("error");
+//Comprobar si hay algún error de juego.html
+//Si es nulo es porque esta todo bien. Si es null hay que resetear el valor session
+    if(sessionStorage.getItem('error')!=null)
+    {
+        error.innerText=sessionStorage.getItem('error');
+        sessionStorage.removeItem('error');
+    }
+    formEntrada.addEventListener('submit',comprobarForm);
+    //eventos de DYD
+    avatarItems = document.getElementsByClassName("avatarImgItem");
+    for(let item of avatarItems){
+        item.addEventListener('dragstart',moviendoImg)
+    }
+    avatarCont = document.getElementById("avatarImg");
+    avatarCont.addEventListener('dragover',e=>{e.preventDefault()})
+    avatarCont.addEventListener('drop',cambiarImg)
+
 }
 
 //Inicio de carga de eventos
-formEntrada.addEventListener('submit',comprobarForm);
+document.addEventListener('DOMContentLoaded', domCargado);
+//geolocalizacion
+datoGeolocalizacion();
